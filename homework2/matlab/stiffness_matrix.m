@@ -1,7 +1,7 @@
 
 % Material and geometry parameters
 
-% Young's modulus
+% Youngs modulus
 E = 1.0e5;               
 
 % Element domain
