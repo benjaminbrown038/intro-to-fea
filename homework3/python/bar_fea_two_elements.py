@@ -5,6 +5,8 @@
 # ========================================================================
 
 import numpy as np
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------
 # Problem data
@@ -84,3 +86,7 @@ print(reactions)
 
 print(f"\nu(x=1) = {u[1]:.6e} m")
 print(f"u(x=2) = {u[2]:.6e} m")
+
+
+
+

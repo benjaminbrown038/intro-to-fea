@@ -71,11 +71,12 @@ def hw6_chimney_Q4():
 
     # Element connectivity (counterclockwise) — convert to 0-based
     conn = np.array([
-        [1, 4, 5, 2],
-        [2, 5, 6, 3],
-        [4, 7, 8, 5],
-        [5, 8, 9, 6]
-    ], dtype=int) - 1
+        [1, 2, 5, 4],
+        [2, 3, 6, 5],
+        [4, 5, 8, 7],
+        [5, 6, 9, 8]
+        ], dtype=int) - 1
+
 
     # Material assignment per element
     k_elem = np.array([k_brick, k_concrete, k_brick, k_concrete], dtype=float)
@@ -181,5 +182,30 @@ def hw6_chimney_Q4():
     for n in range(ndof):
         plt.text(nodes[n, 0], nodes[n, 1], f"{n+1}", color='b',
                  ha='center', va='center', fontsize=10)
+
     # element labels (at centroid)
-    for e in range(conn.sha
+    for e in range(conn.shape[0]):
+        quad = conn[e, :]
+        centroid = nodes[quad, :].mean(axis=0)
+        plt.text(centroid[0], centroid[1], f"e{e+1}",
+                 color=(0.85, 0.0, 0.2), fontweight='bold',
+                 ha='center', va='center', fontsize=11)
+
+    plt.gca().set_aspect('equal', 'box')
+    plt.xlabel('x [m]')
+    plt.ylabel('y [m]')
+    plt.title('Node & Element Numbering (Q4 mesh)')
+    plt.tight_layout()
+
+    # (optional) save CSV of nodal temperatures
+    out = np.column_stack([np.arange(1, ndof + 1), nodes, u])
+    np.savetxt('hw6_chimney_q4_nodal_temperatures.csv',
+               out, delimiter=',',
+               header='Node,x,y,T', comments='',
+               fmt=['%d', '%.6f', '%.6f', '%.6f'])
+
+    plt.show()
+
+
+if __name__ == "__main__":
+    hw6_chimney_Q4()
