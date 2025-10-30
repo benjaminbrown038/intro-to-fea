@@ -27,23 +27,28 @@ for k in range(len(xi)):
     du_lin[k] = B @ d_lin
 
 plt.figure(figsize=(10, 4))
+
+# Left subplot: Linear shape function
 plt.subplot(1, 2, 1)
 plt.plot(xi, u_lin, 'b', linewidth=1.5)
 plt.plot([-1, 1], d_lin, 'ro', markerfacecolor='r')
-plt.title('u(ξ) = ξ + 1')
-plt.xlabel('ξ')
-plt.ylabel('u(ξ)')
+plt.title('Linear Element Shape Function: $u(\\xi)$')
+plt.xlabel('Parent Coordinate $\\xi$')
+plt.ylabel('Displacement $u(\\xi)$')
 plt.grid(True)
 
+# Right subplot: Derivative
 plt.subplot(1, 2, 2)
 plt.plot(xi, du_lin, 'r', linewidth=1.5)
-plt.title('du/dξ = 1')
-plt.xlabel('ξ')
-plt.ylabel('du/dξ')
+plt.title('Derivative of Shape Function: $du/d\\xi$')
+plt.xlabel('Parent Coordinate $\\xi$')
+plt.ylabel('Slope $du/d\\xi$')
 plt.grid(True)
 
+plt.suptitle('Two-Node Linear Finite Element — Shape Function and Derivative', fontsize=13)
 plt.tight_layout()
 plt.show()
+
 
 # ======================================================================
 # 3-node Quadratic Element
@@ -54,11 +59,13 @@ u_quad = np.zeros_like(xi)
 du_quad = np.zeros_like(xi)
 
 for k in range(len(xi)):
+    # Shape functions
     N = np.array([
         0.5 * xi[k] * (xi[k] - 1),
         1 - xi[k]**2,
         0.5 * xi[k] * (xi[k] + 1)
     ])
+    # Derivatives
     B = np.array([
         xi[k] - 0.5,
         -2 * xi[k],
@@ -67,4 +74,33 @@ for k in range(len(xi)):
     u_quad[k] = N @ d_quad
     du_quad[k] = B @ d_quad
 
-plt.figure(figsiz
+# ======================================================================
+# Plot results for the 3-node element
+# ======================================================================
+plt.figure(figsize=(10, 4))
+
+# Left subplot: Quadratic shape function
+plt.subplot(1, 2, 1)
+plt.plot(xi, u_quad, 'b', linewidth=1.5)
+plt.plot([-1, 0, 1], d_quad, 'ro', markerfacecolor='r')
+plt.title('Quadratic Element Shape Function')
+plt.xlabel('Parent Coordinate $\\xi$ (Natural Domain)')
+plt.ylabel('Interpolated Displacement $u(\\xi)$')
+plt.grid(True)
+
+# Right subplot: Derivative
+plt.subplot(1, 2, 2)
+plt.plot(xi, du_quad, 'r', linewidth=1.5)
+plt.title('Derivative of Quadratic Shape Function')
+plt.xlabel('Parent Coordinate $\\xi$ (Natural Domain)')
+plt.ylabel('Shape Function Gradient $du/d\\xi$')
+plt.grid(True)
+
+plt.suptitle('Three-Node Quadratic Finite Element — Shape Function and Derivative', fontsize=13)
+plt.tight_layout()
+plt.show()
+
+
+# ======================================================================
+#  End of file
+# ======================================================================
