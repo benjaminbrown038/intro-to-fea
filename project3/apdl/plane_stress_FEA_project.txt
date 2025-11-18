@@ -1,104 +1,128 @@
-/prep7
 ! ------------------------------------------------------------
-! ENGR 4350/6350 — Project 2
-! 2-D steady heat conduction (FEM) in a rectangle
-! MATLAB → APDL translation (Q4 elements)
+! ENGR 4350/6350 — Project 3: 2D Linear Elasticity (Plane Stress)
+! MATLAB → APDL translation
 !
-! 1. Inputs
-! 2. Material (k)
-! 3. Geometry + Area
-! 4. Mesh (mapped, nx × ny)
-! 5. Boundary Conditions (Dirichlet + Neumann)
+! 1. Material
+! 2. Geometry
+! 3. Mesh (Q4, 3×2)
+! 4. Boundary conditions (fixed left)
+! 5. Apply uniform traction on right edge
 ! 6. Solve
-! 7. Postprocessing
+! 7. Postprocessing (disp, stress, von Mises)
+! 8. Export nodal displacements to CSV-like file
 ! ------------------------------------------------------------
 
-! -------- 1) Inputs (match MATLAB) -------------------------
-kval = 20.0 ! thermal conductivity
+/prep7
+
+! -------- 1) Material (plane stress) -----------------------
+EVAL  = 210e9        ! Young's modulus [Pa]
+NUVAL = 0.30         ! Poisson ratio
+thick = 1.0          ! thickness (out-of-plane)
+
+et,1,182             ! PLANE182 4-node structural
+keyopt,1,3,0         ! plane stress with thickness
+
+mp,ex,1,EVAL
+mp,prxy,1,NUVAL
+r,1,thick
+
+! -------- 2) Geometry --------------------------------------
 Lx = 1.0
 Ly = 0.8
-nx = 3 ! elements along x
-ny = 2 ! elements along y
 
-Tleft = 400 ! Dirichlet BC on left
-qtop = 1.0e4 ! Neumann flux on top
-
-! -------- 2) Element type & material ----------------------
-et,1,55 ! PLANE55: 2D thermal, 4-node
-keyopt,1,3,0 ! plane (not axisymmetric)
-
-mp,kxx,1,kval ! conductivity in x
-mp,kyy,1,kval ! conductivity in y (same, isotropic)
-
-r,1,1.0 ! thickness = 1 (out-of-plane)
-
-! -------- 3) Geometry (rectangular area 0≤x≤Lx, 0≤y≤Ly) ---
-k,1,0, 0
+k,1,0,  0
 k,2,Lx, 0
 k,3,Lx, Ly
-k,4,0, Ly
+k,4,0,  Ly
 a,1,2,3,4
 
-! -------- 4) Mapped mesh (nx × ny Q4 elements) -----------
-! Lines are generated automatically as 1–4 around the area.
-lesize,1,nx ! bottom edge (x-direction divisions)
-lesize,3,nx ! top edge
-lesize,2,ny ! right edge (y-direction divisions)
-lesize,4,ny ! left edge
+! -------- 3) Mesh (Q4, nx=3, ny=2) -------------------------
+nx = 3
+ny = 2
 
-mshape,1,2d ! 2D mapped
-mshkey,1 ! mapped mesh
-amesh,1 ! mesh the area
+! Lines around the area are 1–4 in order
+lesize,1,nx      ! bottom
+lesize,3,nx      ! top
+lesize,2,ny      ! right
+lesize,4,ny      ! left
+
+mshape,1,2d
+mshkey,1
+amesh,1
 
 allsel,all
 
-! -------- 5) Boundary Conditions --------------------------
-! Dirichlet: T = 400 on left boundary (x=0)
+! -------- 4) Boundary Conditions (fixed left edge) ---------
+! MATLAB: left_nodes = find(abs(X) < 1e-12);
+! bc.fixed_dofs: ux = 0, uy = 0 on left side
+
 nsel,s,loc,x,0
-d,all,temp,Tleft
-
-! Neumann: q = qtop on top boundary (y=Ly)
-nsel,s,loc,y,Ly
-sf,all,hflux,qtop ! uniform normal heat flux on boundary
-
-! (Other edges are adiabatic by default: no flux specified)
+d,all,ux,0
+d,all,uy,0
 allsel,all
 
-! -------- 6) Solve steady-state conduction ---------------
+! -------- 5) Apply uniform traction on right edge ----------
+! MATLAB traction: [1e6; 0] (normal tensile traction on right boundary)
+! Use a surface pressure on element edge 2 (between nodes 2–3).
+
+*set,TRAC,1e6       ! traction [Pa]
+
+! Select elements attached to nodes on x = Lx
+nsel,s,loc,x,Lx
+esln                 ! select elements attached to these nodes
+
+! Face 2 of a 4-node quad is between nodes 2–3 (right edge)
+! In ANSYS, positive PRES is compressive (toward element),
+! so use negative to get tensile traction pulling outward.
+sfe,all,2,pres,-TRAC
+
+allsel,all
+
+! -------- 6) Solve -----------------------------------------
 /solu
-antype,0 ! steady-state
+antype,0            ! static analysis
 solve
 finish
 
-! -------- 7) Postprocessing -------------------------------
+! -------- 7) Postprocessing --------------------------------
 /post1
 
-! --- contour of temperature (analogous to contourf in MATLAB)
-plnsol,temp
+! Displacement vector plot (analogous to quiver of u)
+/graphics,full
+pldisp,2            ! deformed + undeformed, vectors
 
-! --- vector heat flux plot (q = -k ∇T) at nodes
-plnsol,hflux
+! Stress: von Mises contour (MATLAB vonMises field)
+plnsol,s,eqv        ! von Mises stress (Pa)
 
-! --- print nodal temperatures in the listing --------------
-prnsol,temp
+! Optional: principal stresses, etc.
+! plnsol,s,1        ! sx
+! plnsol,s,2        ! sy
+! plnsol,s,3        ! txy
 
-! --- OPTIONAL: write nodal temperatures to a CSV-like file
-! (Node, X, Y, T) similar to nodal_temperatures.csv
-*get,nnnode,node,0,count
-*cfopen,nodal_temperatures,csv
-*vwrite,'Node','X','Y','T'
-(4(A12,','))
+! -------- 8) Export nodal displacements to CSV-like file ---
+! MATLAB: nodal_displacements.csv with columns [x, y, ux, uy]
 
-*do,i,1,nnnode
-*get,nd,node,0,num,min ! get first node number
-*if,i,gt,1,then
-*get,nd,node,nd,num,next ! then step to next node
-*endif
-*get,xi,node,nd,loc,x
-*get,yi,node,nd,loc,y
-*get,ti,node,nd,temp
-*vwrite,nd,xi,yi,ti
-(I8,',',F12.5,',',F12.5,',',F12.5)
+*get,NNODE,node,0,count     ! number of nodes
+
+*cfopen,nodal_displacements,csv
+! Header line
+*vwrite,'Node','X','Y','UX','UY'
+(5(A12,','))
+
+! Loop through nodes in ascending order
+*get,ND,node,0,num,min
+*do,i,1,NNODE
+    *if,i,gt,1,then
+        *get,ND,node,ND,num,next
+    *endif
+
+    *get,XI,node,ND,loc,x
+    *get,YI,node,ND,loc,y
+    *get,UXI,node,ND,u,x
+    *get,UYI,node,ND,u,y
+
+    *vwrite,ND,XI,YI,UXI,UYI
+    (I8,',',F12.5,',',F12.5,',',E16.8,',',E16.8)
 *enddo
 *cfclose
 
