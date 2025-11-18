@@ -1,0 +1,14 @@
+Upload the following files to ELC
+• PDF file containing the following items:
+o Clearly defined geometry and conditions. This includes:
+▪ All nodal and elemental numbering schemes.
+▪ Selected boundary conditions (location and values)
+▪ Stiffness (E)
+o Results:
+▪ Nodal displacements (both MATLAB and APDL)
+
+• Original MATLAB scripts used to produce the results.
+• APDL script (.txt) used for comparison.
+6350 Assignment:
+• Generate a contour plot of the von mises stress within the geometry.
+
