@@ -1,106 +1,110 @@
+! ------------------------------------------------------------
+! ENGR 4350/6350 – Project 3
+! 2D Linear Elasticity – Plane Stress Q4 Element
+! APDL Implementation (Clean, standalone)
+! ------------------------------------------------------------
+
 /prep7
-! ------------------------------------------------------------
-! ENGR 4350/6350 — Project 2
-! 2-D steady heat conduction (FEM) in a rectangle
-! MATLAB → APDL translation (Q4 elements)
-!
-! 1. Inputs
-! 2. Material (k)
-! 3. Geometry + Area
-! 4. Mesh (mapped, nx × ny)
-! 5. Boundary Conditions (Dirichlet + Neumann)
-! 6. Solve
-! 7. Postprocessing
-! ------------------------------------------------------------
+clear
+finish
+/prep7
+/title, 2D Plane Stress – Q4 Bilinear Element
 
-! -------- 1) Inputs (match MATLAB) -------------------------
-kval = 20.0 ! thermal conductivity
-Lx = 1.0
-Ly = 0.8
-nx = 3 ! elements along x
-ny = 2 ! elements along y
+! ----------------------------
+! Material Properties
+! ----------------------------
+E   = 210e9
+nu  = 0.30
+thk = 1.0     ! thickness (b)
 
-Tleft = 400 ! Dirichlet BC on left
-qtop = 1.0e4 ! Neumann flux on top
+mp,ex,1,E
+mp,prxy,1,nu
 
-! -------- 2) Element type & material ----------------------
-et,1,55 ! PLANE55: 2D thermal, 4-node
-keyopt,1,3,0 ! plane (not axisymmetric)
+! Plane stress element
+et,1,182     ! PLANE182
+keyopt,1,3,0 ! Plane stress
 
-mp,kxx,1,kval ! conductivity in x
-mp,kyy,1,kval ! conductivity in y (same, isotropic)
+! ----------------------------
+! Geometry
+! ----------------------------
+L = 5.0
+H = 1.0
 
-r,1,1.0 ! thickness = 1 (out-of-plane)
+! Define nodes (Q4)
+n,1, 0, 0
+n,2, L, 0
+n,3, L, H
+n,4, 0, H
 
-! -------- 3) Geometry (rectangular area 0≤x≤Lx, 0≤y≤Ly) ---
-k,1,0, 0
-k,2,Lx, 0
-k,3,Lx, Ly
-k,4,0, Ly
-a,1,2,3,4
+! Define element
+e,1,2,3,4
 
-! -------- 4) Mapped mesh (nx × ny Q4 elements) -----------
-! Lines are generated automatically as 1–4 around the area.
-lesize,1,nx ! bottom edge (x-direction divisions)
-lesize,3,nx ! top edge
-lesize,2,ny ! right edge (y-direction divisions)
-lesize,4,ny ! left edge
+! ----------------------------
+! Mesh (1 element only for demo)
+! If full mesh needed (Nx,Ny), say: esize, L/Nx, h/Ny, amap...
+! ----------------------------
 
-mshape,1,2d ! 2D mapped
-mshkey,1 ! mapped mesh
-amesh,1 ! mesh the area
+! Set thickness
+sect,1,plane
+secdata, thk
 
-allsel,all
+! ----------------------------
+! Boundary Conditions
+! ----------------------------
 
-! -------- 5) Boundary Conditions --------------------------
-! Dirichlet: T = 400 on left boundary (x=0)
-nsel,s,loc,x,0
-d,all,temp,Tleft
+! Left edge fixed: nodes 1 and 4
+d,1,all,0
+d,4,all,0
 
-! Neumann: q = qtop on top boundary (y=Ly)
-nsel,s,loc,y,Ly
-sf,all,hflux,qtop ! uniform normal heat flux on boundary
+! ----------------------------
+! Apply Traction on Right Edge
+! Equivalent nodal forces for σ_x = traction*T*h
+! For 4-node element: distributed load → nodal forces
+! τ applied in x-direction on right edge
+! ----------------------------
 
-! (Other edges are adiabatic by default: no flux specified)
-allsel,all
+tau = 1e6  ! example traction (Pa). Replace with your value.
 
-! -------- 6) Solve steady-state conduction ---------------
+! For edge connecting nodes 2–3:
+! Fx2 = Fx3 = tau * thickness * edge_length / 2
+flen = H
+Fx = tau * thk * flen / 2
+
+f,2,fx,Fx
+f,3,fx,Fx
+
+! ----------------------------
+! Solve
+! ----------------------------
+finish
 /solu
-antype,0 ! steady-state
+antype,static
 solve
 finish
 
-! -------- 7) Postprocessing -------------------------------
+! ----------------------------
+! Post-processing
+! ----------------------------
 /post1
+set,last
 
-! --- contour of temperature (analogous to contourf in MATLAB)
-plnsol,temp
+! Displacement contour
+plnsol,u,sum
 
-! --- vector heat flux plot (q = -k ∇T) at nodes
-plnsol,hflux
+! Stress components
+plnsol,s,x
+plnsol,s,y
+plnsol,s,xy
 
-! --- print nodal temperatures in the listing --------------
-prnsol,temp
+! Von Mises
+plnsol,s,eqv
 
-! --- OPTIONAL: write nodal temperatures to a CSV-like file
-! (Node, X, Y, T) similar to nodal_temperatures.csv
-*get,nnnode,node,0,count
-*cfopen,nodal_temperatures,csv
-*vwrite,'Node','X','Y','T'
-(4(A12,','))
+! Nodal displacement listing
+prnsol,u
 
-*do,i,1,nnnode
-*get,nd,node,0,num,min ! get first node number
-*if,i,gt,1,then
-*get,nd,node,nd,num,next ! then step to next node
-*endif
-*get,xi,node,nd,loc,x
-*get,yi,node,nd,loc,y
-*get,ti,node,nd,temp
-*vwrite,nd,xi,yi,ti
-(I8,',',F12.5,',',F12.5,',',F12.5)
-*enddo
-*cfclose
-
-finish
-/exit,no
+! Element stresses at Gauss points
+etable,sx,ls,1
+etable,sy,ls,2
+etable,txy,ls,3
+etable,seqv,ls,11
+pretab,sx,sy,txy,seqv
