@@ -89,7 +89,6 @@ $$
 \frac{\partial u_x}{\partial x}\\
 \frac{\partial u_y}{\partial y}\\
 \frac{\partial u_x}{\partial y}
-+
 \frac{\partial u_y}{\partial x}
 \end{bmatrix}.
 $$
@@ -98,7 +97,6 @@ $$
 
 $$
 \boldsymbol{\sigma}_v
-=
 \mathbf{D}\boldsymbol{\varepsilon}_v,
 \qquad
 \boldsymbol{\sigma}_v=
@@ -143,7 +141,6 @@ Nodes are numbered counterclockwise:
 
 $$
 (\xi_i,\eta_i)
-=
 (-1,-1),\ (1,-1),\ (1,1),\ (-1,1).
 $$
 
@@ -181,13 +178,10 @@ Define the Jacobian:
 
 $$
 \mathbf{J}
-=
 \begin{bmatrix}
 \frac{\partial x}{\partial\xi}
-&
 \frac{\partial x}{\partial\eta}\\
 \frac{\partial y}{\partial\xi}
-&
 \frac{\partial y}{\partial\eta}
 \end{bmatrix}.
 $$
@@ -322,7 +316,6 @@ The consistent edge-load vector is:
 
 $$
 \mathbf{F}_e^{\mathrm{edge}}
-=
 t\int_{\Gamma_{t,e}}
 \mathbf{N}^{T}\overline{\mathbf{t}}\,ds.
 $$
@@ -342,13 +335,11 @@ Assemble the global stiffness and load:
 
 $$
 \mathbf{K}
-=
 \sum_e\mathbf{A}_e^{T}\mathbf{K}_e\mathbf{A}_e,
 $$
 
 $$
 \mathbf{F}
-=
 \sum_e\mathbf{A}_e^{T}\mathbf{F}_e.
 $$
 
@@ -362,7 +353,6 @@ Using the original assembled matrices, support reactions are:
 
 $$
 \mathbf{R}_c
-=
 \mathbf{K}_{cf}\mathbf{d}_f-\mathbf{F}_c.
 $$
 
@@ -372,13 +362,11 @@ At each evaluation point:
 
 $$
 \boldsymbol{\varepsilon}_v
-=
 \mathbf{B}\mathbf{d}_e,
 $$
 
 $$
 \boldsymbol{\sigma}_v
-=
 \mathbf{D}\mathbf{B}\mathbf{d}_e.
 $$
 
@@ -389,7 +377,6 @@ Plane-stress von Mises stress is:
 
 $$
 \sigma_{\mathrm{vm}}
-=
 \sqrt{
 \sigma_{xx}^{2}
 -\sigma_{xx}\sigma_{yy}
@@ -406,7 +393,6 @@ Nodal averaging can smooth discontinuities between elements.
 
 $$
 \mathbf{x}_{\mathrm{plot}}
-=
 \mathbf{x}+s\mathbf{u}_h.
 $$
 
