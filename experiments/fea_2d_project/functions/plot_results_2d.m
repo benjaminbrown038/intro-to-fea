@@ -1,4 +1,4 @@
-function plot_results_2D(nodes, elements, stress)
+function plot_results_2d(nodes, elements, stress)
 % Von Mises stress
 sigma_x = stress(1,:);
 sigma_y = stress(2,:);

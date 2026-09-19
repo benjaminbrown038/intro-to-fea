@@ -1,11 +1,20 @@
+% --- Robust path setup (works no matter where you run from) ---
+thisDir = fileparts(mfilename('fullpath'));
+addpath(fullfile(thisDir, '..', 'functions'));
+rehash
+
 %% Load Problem Setup
-run('problem_setup_2D.m');
+run(fullfile(thisDir, 'problem_setup_2D.m'));
+
+%% Generate Mesh (match the actual filename you have)
+[nodes, elements] = generate_mesh_2d(Lx, Ly, nx, ny);
+
 
 %% Generate Mesh
-[nodes, elements] = generate_mesh_2D(Lx, Ly, nx, ny);
+[nodes, elements] = generate_mesh_2d(Lx, Ly, nx, ny);
 
 %% Assemble Global Stiffness
-K = assemble_stiffness_2D(E, nu, nodes, elements);
+K = assemble_stiffness_2d(E, nu, nodes, elements);
 
 %% Force Vector
 n_nodes = size(nodes,1);
@@ -26,7 +35,7 @@ end
 U = K\Fvec;
 
 %% Compute Strain and Stress
-[strain, stress] = compute_strain_stress_2D(U, nodes, elements, E, nu);
+[strain, stress] = compute_strain_stress_2d(U, nodes, elements, E, nu);
 
 %% Plot
-plot_results_2D(nodes, elements, stress);
+plot_results_2d(nodes, elements, stress);
