@@ -181,11 +181,9 @@ Because the shape functions are linear:
 
 $$
 \frac{\partial N_i}{\partial x}
-=
 \frac{b_i}{2A_e},
 \qquad
 \frac{\partial N_i}{\partial y}
-=
 \frac{c_i}{2A_e}.
 $$
 
