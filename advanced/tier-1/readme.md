@@ -32,7 +32,6 @@ The displacement field is:
 
 $$
 \mathbf{u}(x,y)
-=
 \begin{bmatrix}
 u_x(x,y)\\
 u_y(x,y)
