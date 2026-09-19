@@ -70,7 +70,6 @@ Using engineering shear strain:
 
 $$
 \boldsymbol{\varepsilon}_v
-=
 \begin{bmatrix}
 \varepsilon_{xx}\\
 \varepsilon_{yy}\\
