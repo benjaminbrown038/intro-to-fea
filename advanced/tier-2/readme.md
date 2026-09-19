@@ -85,7 +85,6 @@ $$
 \varepsilon_{yy}\\
 \gamma_{xy}
 \end{bmatrix}
-=
 \begin{bmatrix}
 \frac{\partial u_x}{\partial x}\\
 \frac{\partial u_y}{\partial y}\\
@@ -112,7 +111,6 @@ $$
 
 $$
 \mathbf{D}
-=
 \frac{E}{1-\nu^2}
 \begin{bmatrix}
 1 & \nu & 0\\
@@ -201,7 +199,6 @@ $$
 \frac{\partial N_i}{\partial x}\\
 \frac{\partial N_i}{\partial y}
 \end{bmatrix}
-=
 \mathbf{J}^{-T}
 \begin{bmatrix}
 \frac{\partial N_i}{\partial\xi}\\
@@ -234,7 +231,6 @@ The complete element matrix is:
 
 $$
 \mathbf{B}
-=
 \begin{bmatrix}
 \mathbf{B}_1 & \mathbf{B}_2 &
 \mathbf{B}_3 & \mathbf{B}_4
@@ -265,7 +261,6 @@ For thickness $t$:
 
 $$
 \mathbf{K}_e
-=
 t\int_{-1}^{1}\int_{-1}^{1}
 \mathbf{B}^{T}\mathbf{D}\mathbf{B}
 \det(\mathbf{J})
@@ -306,7 +301,6 @@ At $x=L$:
 
 $$
 \boldsymbol{\sigma}\mathbf{n}
-=
 \overline{\mathbf{t}}.
 $$
 
@@ -314,7 +308,6 @@ For uniform downward traction of magnitude $q$:
 
 $$
 \overline{\mathbf{t}}
-=
 \begin{bmatrix}
 0\\
 -q
