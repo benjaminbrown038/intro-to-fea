@@ -76,7 +76,6 @@ $$
 \varepsilon_{yy}\\
 \gamma_{xy}
 \end{bmatrix}
-=
 \begin{bmatrix}
 \frac{\partial u_x}{\partial x}\\
 \frac{\partial u_y}{\partial y}\\
@@ -93,11 +92,9 @@ $\gamma_{xy}=2\varepsilon_{xy}$.
 
 $$
 \boldsymbol{\sigma}_v
-=
 \mathbf{D}\boldsymbol{\varepsilon}_v,
 \qquad
 \boldsymbol{\sigma}_v
-=
 \begin{bmatrix}
 \sigma_{xx}\\
 \sigma_{yy}\\
@@ -107,7 +104,6 @@ $$
 
 $$
 \mathbf{D}
-=
 \frac{E}{1-\nu^2}
 \begin{bmatrix}
 1 & \nu & 0\\
@@ -141,7 +137,6 @@ At $x=L$, apply a downward traction of magnitude $q$:
 
 $$
 \boldsymbol{\sigma}\mathbf{n}
-=
 \begin{bmatrix}
 0\\
 -q
@@ -182,7 +177,6 @@ The element stiffness matrix is:
 
 $$
 \mathbf{K}_e
-=
 t\int_{\Omega_e}
 \mathbf{B}^{T}\mathbf{D}\mathbf{B}\,dA.
 $$
@@ -191,7 +185,6 @@ The consistent element load vector on a loaded edge is:
 
 $$
 \mathbf{F}_e
-=
 t\int_{\Gamma_{t,e}}
 \mathbf{N}^{T}\overline{\mathbf{t}}\,ds.
 $$
@@ -206,7 +199,6 @@ Element stresses are recovered using:
 
 $$
 \boldsymbol{\sigma}_v
-=
 \mathbf{D}\mathbf{B}\mathbf{d}_e.
 $$
 
@@ -219,7 +211,6 @@ The displayed deformed coordinates are:
 
 $$
 \mathbf{x}_{\mathrm{plot}}
-=
 \mathbf{x}+s\mathbf{u}_h.
 $$
 
@@ -230,7 +221,6 @@ The plane-stress von Mises equivalent stress is:
 
 $$
 \sigma_{\mathrm{vm}}
-=
 \sqrt{
 \sigma_{xx}^{2}
 -\sigma_{xx}\sigma_{yy}
