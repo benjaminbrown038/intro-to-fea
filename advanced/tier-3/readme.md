@@ -46,7 +46,6 @@ $$
 \varepsilon_{yy}\\
 \gamma_{xy}
 \end{bmatrix}
-=
 \begin{bmatrix}
 \frac{\partial u_x}{\partial x}\\
 \frac{\partial u_y}{\partial y}\\
@@ -66,7 +65,6 @@ $$
 
 $$
 \boldsymbol{\sigma}_v
-=
 \mathbf{D}\boldsymbol{\varepsilon}_v,
 \qquad
 \boldsymbol{\sigma}_v=
@@ -79,7 +77,6 @@ $$
 
 $$
 \mathbf{D}
-=
 \frac{E}{1-\nu^2}
 \begin{bmatrix}
 1 & \nu & 0\\
@@ -196,7 +193,6 @@ Therefore:
 
 $$
 \mathbf{B}
-=
 \frac{1}{2A_e}
 \begin{bmatrix}
 b_1 & 0 & b_2 & 0 & b_3 & 0\\
@@ -209,7 +205,6 @@ The element strain is:
 
 $$
 \boldsymbol{\varepsilon}_v
-=
 \mathbf{B}\mathbf{d}_e.
 $$
 
@@ -222,7 +217,6 @@ For constant thickness $t$ and constitutive matrix $\mathbf{D}$:
 
 $$
 \mathbf{K}_e
-=
 t\int_{\Omega_e}
 \mathbf{B}^{T}\mathbf{D}\mathbf{B}\,dA.
 $$
@@ -231,7 +225,6 @@ This reduces exactly to:
 
 $$
 \mathbf{K}_e
-=
 tA_e\mathbf{B}^{T}\mathbf{D}\mathbf{B}.
 $$
 
@@ -246,7 +239,6 @@ $\mathbf{b}=[b_x,b_y]^T$:
 
 $$
 \mathbf{F}_e^{\mathrm{body}}
-=
 \frac{tA_e}{3}
 \begin{bmatrix}
 b_x\\
@@ -266,9 +258,7 @@ produces equal consistent nodal loads:
 
 $$
 \mathbf{F}_i^{\mathrm{edge}}
-=
 \mathbf{F}_j^{\mathrm{edge}}
-=
 \frac{t\ell}{2}\overline{\mathbf{t}}.
 $$
 
@@ -288,7 +278,6 @@ Prescribed traction:
 
 $$
 \boldsymbol{\sigma}\mathbf{n}
-=
 \overline{\mathbf{t}}
 \qquad \text{on } \Gamma_N.
 $$
@@ -308,13 +297,11 @@ Assemble:
 
 $$
 \mathbf{K}
-=
 \sum_e\mathbf{A}_e^T\mathbf{K}_e\mathbf{A}_e,
 $$
 
 $$
 \mathbf{F}
-=
 \sum_e\mathbf{A}_e^T\mathbf{F}_e.
 $$
 
@@ -322,7 +309,6 @@ Separate free and prescribed degrees of freedom:
 
 $$
 \mathbf{K}_{ff}\mathbf{d}_f
-=
 \mathbf{F}_f-\mathbf{K}_{fc}\mathbf{d}_c.
 $$
 
@@ -334,7 +320,6 @@ Element stress is:
 
 $$
 \boldsymbol{\sigma}_{v,e}
-=
 \mathbf{D}\mathbf{B}\mathbf{d}_e.
 $$
 
@@ -345,7 +330,6 @@ Plane-stress von Mises stress is:
 
 $$
 \sigma_{\mathrm{vm},e}
-=
 \sqrt{
 \sigma_{xx,e}^{2}
 -\sigma_{xx,e}\sigma_{yy,e}
@@ -360,7 +344,6 @@ The displayed deformed coordinates are:
 
 $$
 \mathbf{x}_{\mathrm{plot}}
-=
 \mathbf{x}+s\mathbf{u}_h.
 $$
 
